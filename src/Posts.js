@@ -1,28 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import "./App.css";
 
-function Posts() {
-  const [posts, setPosts] = useState([]);
-
+const Posts = () => {
+  const [data, setData] = useState("");
   useEffect(() => {
-    axios.get('https://dummyjson.com/posts')
-      .then(response => setPosts(response.data))
-      .catch(error => console.log(error));
+    fetch("https://dummyjson.com/posts").then((res) => {
+      res.json().then((data) => {
+        console.log(data);
+        setData(data);
+      });
+    });
   }, []);
-
   return (
     <div>
-      <h1>List of Posts:</h1>
-      <ul>
-        {[posts].map(post => (
-          <li key={post.id}>
-            <h3>{post.title}</h3>
-            <p>{post.body}</p>
-          </li>
-        ))}
-      </ul>
+      <h1>Posts API Data</h1>
+      {data &&
+        data.posts.map((item, index) => {
+          return (
+            <table key={index}>
+              <thead>
+                <tr>
+                  <th>Id</th>
+                  <th>Title</th>
+                  <th>Body</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td>{item.id}</td>
+                  <td>{item.title}</td>
+                  <td>{item.body}</td>
+                </tr>
+              </tbody>
+            </table>
+          );
+        })}
     </div>
   );
-}
+};
 
 export default Posts;
